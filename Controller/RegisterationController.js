@@ -13,7 +13,7 @@ export const RegisterUser = async (req, res) => {
             email: req.body.email,
             password: req.body.password,
         });
-        await sendVerificationEmail(req.body.name, req.body.email, registration._id);
+        sendVerificationEmail(req.body.name, req.body.email, registration._id);
         await registration.save();
         return res.status(200).json({ message: 'Registration Successful', registration });
     } catch (error) {
