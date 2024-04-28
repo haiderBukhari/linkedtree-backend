@@ -13,8 +13,8 @@ export const RegisterUser = async (req, res) => {
             email: req.body.email,
             password: req.body.password,
         });
+        await sendVerificationEmail(req.body.name, req.body.email, registration._id);
         await registration.save();
-        sendVerificationEmail(req.body.name, req.body.email, registration._id);
         return res.status(200).json({ message: 'Registration Successful', registration });
     } catch (error) {
         return res.status(500).json({ message: 'Internal server error' });
@@ -49,6 +49,9 @@ export const login = async (req, res) => {
         }
         if (user.password !== password) {
             throw new Error('Invalid email or password');
+        }
+        if(!user.isVerified) {
+            sendVerificationEmail(user.name, user.email, user._id);
         }
         const token = jwt.sign({ userId: user._id }, process.env.ENCRYPTION_SECRET, { expiresIn: '1d' });
         return res.status(200).json({  message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name });
