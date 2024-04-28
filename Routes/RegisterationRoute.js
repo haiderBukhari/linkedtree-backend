@@ -8,4 +8,5 @@ RegisterationRoutes.route('/:id').get(getUserData).patch(updateUserData)
 RegisterationRoutes.route('/verify/:id').patch(verifyUser)
 RegisterationRoutes.route('/email').post(sendEmail)
 
+// 
 export default RegisterationRoutes;
