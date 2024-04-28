@@ -9,10 +9,7 @@ import paymentHistoryRoutes from "./Routes/paymentHistoryRoute.js";
 configDotenv();
 const app = express()
 app.use(express.json())
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-}))
+app.use(cors())
 
 app.use('/auth', RegisterationRoutes);
 app.use('/checkout', StripeCheckout);
