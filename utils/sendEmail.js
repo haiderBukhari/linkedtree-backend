@@ -37,7 +37,7 @@ export const sendVerificationEmail = (name, emailId, id) => {
 				button: {
 					color: '#22BC66',
 					text: 'Open App',
-					link: `http://localhost:3009/auth/verify/${id}`,
+					link: `http://localhost:3000/verify?id=${id}`,
 				},
 			},
 		},

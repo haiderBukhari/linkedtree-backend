@@ -4,6 +4,7 @@ import { configDotenv } from "dotenv"
 import RegisterationRoutes from "./Routes/RegisterationRoute.js";
 import connectDB from "./config/MongooseConnection.js";
 import StripeCheckout from "./Routes/StripeCheckoutRoute.js";
+import paymentHistoryRoutes from "./Routes/paymentHistoryRoute.js";
 
 configDotenv();
 const app = express()
@@ -15,6 +16,7 @@ app.use(cors({
 
 app.use('/auth', RegisterationRoutes);
 app.use('/checkout', StripeCheckout);
+app.use('/payment/history', paymentHistoryRoutes);
 
 const PORT = process.env.PORT || 8080
 

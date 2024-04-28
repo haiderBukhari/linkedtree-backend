@@ -15,6 +15,14 @@ const registrationSchema = new mongoose.Schema(
         password: {
             type: String,
         },
+        phoneNumber: {
+            type: String,
+            default: ''
+        },
+        profilePicture: {
+            type: String,
+            default: ''
+        },
         isVerified: {
             type: Boolean,
             default: false
@@ -29,6 +37,10 @@ const registrationSchema = new mongoose.Schema(
             default: ""
         },
         paymentDate: {
+            type: Date,
+            default: null
+        },
+        expiryDate: {
             type: Date,
             default: null
         }

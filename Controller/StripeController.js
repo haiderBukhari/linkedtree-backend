@@ -1,7 +1,8 @@
 import Registration from '../Models/RegisterationModel.js';
+import paymentModel from "../Models/paymentHistoryModel.js"
 import stripe from 'stripe';
 
-const stripeInstance = stripe("YOUR API KEY");
+const stripeInstance = stripe("sk_test_51P8EJNBRuVDskNC70m3RMEJzm8HQBX7syEuW1aaz2mv8DXMF7jHvgQ83fKj60q2yzDVzkzXNqp4RQb9vObRJ8AQR002vovaMbU");
 
 export const monthlySessionCheckout = async (req, res) => {
     const session = await stripeInstance.checkout.sessions.create({
@@ -34,7 +35,6 @@ export const monthlySessionCheckout = async (req, res) => {
         },
     });
 
-    console.log(session);
     return res.json({
         session: session
     })
@@ -71,7 +71,6 @@ export const yearlySessionCheckout = async (req, res) => {
         },
     });
 
-    console.log(session);
     return res.json({
         session: session
     })
@@ -86,8 +85,19 @@ export const completePayment = async (req, res) => {
     user.paymentDone = true;
     user.paymentType = userData.plan;
     user.paymentDate = Date.now();
+    if(session.metadata.plan == "Yearly"){
+        user.expiryDate = Date.now() + (365 * 24 * 60 * 60 * 1000);
+    }else if(session.metadata.plan == "Monthly"){
+        user.expiryDate = Date.now() + (30 * 24 * 60 * 60 * 1000);
+    }
     await user.save();
-    console.log(session)
+    const paymentData = {
+        ownerId: userData.userId,
+        plan: userData.plan,
+        amount: session.amount_total / 100,
+        date: Date.now()
+    }
+    await paymentModel.create(paymentData);
     return res.json({
         success: true
     });
