@@ -29,6 +29,6 @@ const paymentHistorySchema = new mongoose.Schema(
     }
 );
 
-const paymentModel = mongoose.model('paymenthistory', paymentHistorySchema);
+const paymentModel = mongoose.model('payments', paymentHistorySchema);
 
 export default paymentModel;
