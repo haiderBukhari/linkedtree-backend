@@ -15,7 +15,7 @@ export const sendVerificationEmail = (name, emailId, id) => {
 		theme: 'default',
 		product: {
 			name: 'Linkedtree',
-			link: 'www.ffsboyswah.com',
+			link: 'www.linktree.com',
 		},
 		header: {
 			title: 'Yours truly',
