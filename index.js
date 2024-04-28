@@ -18,6 +18,12 @@ app.use('/auth', RegisterationRoutes);
 app.use('/checkout', StripeCheckout);
 app.use('/payment/history', paymentHistoryRoutes);
 
+app.use('*', (req, res) => {
+    res.status(200).json({
+        status: "server started"
+    })
+})
+
 const PORT = process.env.PORT || 8080
 
 connectDB().then(()=>{
