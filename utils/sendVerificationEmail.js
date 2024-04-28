@@ -10,6 +10,7 @@ export const sendVerificationEmail = (name, emailId, id) => {
 			user: "apshaiderbukhari786@gmail.com",
 			pass: process.env.ApplicationPassword,
 		},
+
 	});
 	const mailGenerator = new Mailgen({
 		theme: 'default',
@@ -60,3 +61,6 @@ export const sendVerificationEmail = (name, emailId, id) => {
 		}
 	});
 };
+
+
+// sendVerificationEmail
