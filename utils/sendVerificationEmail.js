@@ -3,11 +3,11 @@ import nodemailer from 'nodemailer';
 
 export const sendVerificationEmail = (name, emailId, id) => {
 	const transporter = nodemailer.createTransport({
-		service: 'gmail',
-		host: 'smtp.gmail.com',
+		host: 'smtp.zoho.com',
 		port: 465,
+		secure: true,
 		auth: {
-			user: "apshaiderbukhari786@gmail.com",
+			user: "principal@ffsboyswah.com",
 			pass: process.env.ApplicationPassword,
 		},
 
@@ -47,7 +47,7 @@ export const sendVerificationEmail = (name, emailId, id) => {
 	const emailBody = mailGenerator.generate(email);
 
 	const mailOptions = {
-		from: 'apshaiderbukhari786@gmail.com',
+		from: 'principal@ffsboyswah.com',
 		to: emailId,
 		subject: 'Verification Link',
 		html: emailBody,
