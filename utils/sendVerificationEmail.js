@@ -5,9 +5,9 @@ export const sendVerificationEmail = (name, emailId, id) => {
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
 		host: 'smtp.gmail.com',
-		port: 587,
+		port: 465,
 		auth: {
-			user: 'muhammad.hannan621@gmail.com',
+			user: "apshaiderbukhari786@gmail.com",
 			pass: process.env.ApplicationPassword,
 		},
 	});
@@ -46,7 +46,7 @@ export const sendVerificationEmail = (name, emailId, id) => {
 	const emailBody = mailGenerator.generate(email);
 
 	const mailOptions = {
-		from: 'muhammad.hannan621@gmail.com',
+		from: 'apshaiderbukhari786@gmail.com',
 		to: emailId,
 		subject: 'Verification Link',
 		html: emailBody,
