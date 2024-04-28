@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Registration from '../Models/RegisterationModel.js';
-import { sendVerificationEmail } from '../utils/sendEmail.js';
+import { sendVerificationEmail } from '../utils/sendVerificationEmail.js';
 
 export const RegisterUser = async (req, res) => {
     try {
