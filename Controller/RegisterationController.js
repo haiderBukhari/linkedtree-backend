@@ -1,6 +1,19 @@
 import jwt from 'jsonwebtoken'
 import Registration from '../Models/RegisterationModel.js';
-import { sendVerificationEmail } from '../utils/sendVerificationEmail.js';
+// import { sendVerificationEmail } from '../utils/sendVerificationEmail.js';
+import { Resend } from "resend"
+
+const resend = new Resend("re_55SZ9Msc_B795Z4pRmpKaN2pnhTbt1TfT");
+
+async function sendVerificationEmail(email, id){
+    const data = await resend.emails.send({
+        from: 'Onboarding <onboarding@ffsboyswah.com>',
+        to: `${email}`,
+        subject: 'Onboarding Verficiation Email Linkedtree',
+        html: `<p>Thanks for Registering you can verify by clicking the below Link <br/> <strong> <a href="https://project-frontend-tree.vercel.app/verify?id=${id}">https://project-frontend-tree.vercel.app/verify?id=${id}</a></strong>!</p>`
+    });
+    console.log(data);
+}
 
 export const RegisterUser = async (req, res) => {
     try {
@@ -13,7 +26,7 @@ export const RegisterUser = async (req, res) => {
             email: req.body.email,
             password: req.body.password,
         });
-        sendVerificationEmail(req.body.name, req.body.email, registration._id);
+        await sendVerificationEmail(req.body.email, registration._id);
         await registration.save();
         return res.status(200).json({ message: 'Registration Successful', registration });
     } catch (error) {
@@ -50,11 +63,11 @@ export const login = async (req, res) => {
         if (user.password !== password) {
             throw new Error('Invalid email or password');
         }
-        if(!user.isVerified) {
-            sendVerificationEmail(user.name, user.email, user._id);
+        if (!user.isVerified) {
+            await sendVerificationEmail(user.email, user._id);
         }
         const token = jwt.sign({ userId: user._id }, process.env.ENCRYPTION_SECRET, { expiresIn: '1d' });
-        return res.status(200).json({  message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name });
+        return res.status(200).json({ message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name });
     } catch (err) {
         return res.status(400).json({
             status: "failed",
@@ -66,17 +79,18 @@ export const login = async (req, res) => {
 
 export const sendEmail = async (req, res) => {
     const email = req.body.email;
-    try{
-        if(!email) {
+    try {
+        if (!email) {
             throw new Error('email is required');
         }
         const user = await Registration.findOne({ email });
         if (!user) {
             throw new Error('Invalid email or password');
         }
-        sendVerificationEmail(user.name, user.email, user._id);
-        return res.status(200).json({  message: 'Email sent successfully' });
-    }catch(err){
+
+        await sendVerificationEmail(email, user._id);
+        return res.status(200).json({ message: 'Email sent successfully' });
+    } catch (err) {
         return res.status(400).json({
             status: "failed",
             message: err.message
@@ -86,13 +100,13 @@ export const sendEmail = async (req, res) => {
 
 export const getUserData = async (req, res) => {
     const id = req.params.id;
-    try{
-        if(!id) {
+    try {
+        if (!id) {
             throw new Error('id is required');
         }
         const user = await Registration.findById(id);
         return res.status(200).json(user);
-    }catch(err){
+    } catch (err) {
         return res.status(400).json({
             status: "failed",
             message: err.message
@@ -100,15 +114,15 @@ export const getUserData = async (req, res) => {
     }
 }
 
-export const updateUserData = async(req, res) => {
+export const updateUserData = async (req, res) => {
     const id = req.params.id;
-    try{
-        if(!id) {
+    try {
+        if (!id) {
             throw new Error('id is required');
         }
         const user = await Registration.findByIdAndUpdate(id, req.body, { new: true });
         return res.status(200).json(user);
-    }catch(err){
+    } catch (err) {
         return res.status(400).json({
             status: "failed",
             message: err.message
