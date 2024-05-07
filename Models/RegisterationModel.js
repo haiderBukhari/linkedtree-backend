@@ -43,6 +43,13 @@ const registrationSchema = new mongoose.Schema(
         expiryDate: {
             type: Date,
             default: null
+        },
+        isTrial: {
+            type: Boolean
+        },
+        isTrialVerified: {
+            type: Boolean,
+            default: false
         }
     },
     {

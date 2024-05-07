@@ -12,7 +12,6 @@ async function sendVerificationEmail(email, id){
         subject: 'Onboarding Verficiation Email Linkedtree',
         html: `<p>Thanks for Registering you can verify by clicking the below Link <br/> <strong> <a href="https://project-frontend-tree.vercel.app/verify?id=${id}">https://project-frontend-tree.vercel.app/verify?id=${id}</a></strong>!</p>`
     });
-    console.log(data);
 }
 
 export const RegisterUser = async (req, res) => {
@@ -25,11 +24,22 @@ export const RegisterUser = async (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: req.body.password,
+            isTrial: req.body.isTrial,
         });
-        await sendVerificationEmail(req.body.email, registration._id);
+        if(req.body.isTrial){
+            await resend.emails.send({
+                from: 'Trial Confirmation <onboarding@ffsboyswah.com>',
+                to: `${req.body.email}`,
+                subject: 'Onboarding Verficiation Email Linkedtree',
+                html: `<p>Thanks for Registering. Your Trial is sent to admin for the verification. As soon as admin will verify your trial you will recieve a verification email.!</p>`
+            });
+        }else{
+            await sendVerificationEmail(req.body.email, registration._id);
+        }
         await registration.save();
         return res.status(200).json({ message: 'Registration Successful', registration });
     } catch (error) {
+        console.log(error.message)
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
