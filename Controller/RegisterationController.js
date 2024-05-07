@@ -124,6 +124,34 @@ export const getUserData = async (req, res) => {
     }
 }
 
+export const getTrialUser = async (req, res) => {
+    try {
+        const user = await Registration.find({isTrial: true, });
+        return res.status(200).json(user);
+    } catch (err) {
+        return res.status(400).json({
+            status: "failed",
+            message: err.message
+        })
+    }
+}
+
+export const updateTrialUser = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const user = await Registration.findById(id);
+        user.isVerified = true;
+        await user.save();
+        await sendVerificationEmail(user.email, user._id);
+        return res.status(200).json(user);
+    } catch (err) {
+        return res.status(400).json({
+            status: "failed",
+            message: err.message
+        })
+    }
+}
+
 export const updateUserData = async (req, res) => {
     const id = req.params.id;
     try {
