@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const registrationSchema = new mongoose.Schema(
+const gameManagement = new mongoose.Schema(
     {
         ownerId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -78,6 +78,6 @@ const registrationSchema = new mongoose.Schema(
     }
 );
 
-const Registration = mongoose.model('Registration', registrationSchema);
+const Game = mongoose.model('Game', gameManagement);
 
-export default Registration;
+export default Game;
