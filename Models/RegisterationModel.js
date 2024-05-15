@@ -31,6 +31,22 @@ const registrationSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
+        instagramClicks: {
+            type: Number,
+            default: 0
+        },
+        facebookClicks: {
+            type: Number,
+            default: 0
+        },
+        twitterClicks: {
+            type: Number,
+            default: 0
+        },
+        googleMapsClicks: {
+            type: Number,
+            default: 0
+        },
         paymentType: {
             type: String,
             enum: ["Monthly", "Yearly", ""],
@@ -46,6 +62,10 @@ const registrationSchema = new mongoose.Schema(
         },
         isTrial: {
             type: Boolean
+        },
+        accountType: {
+            type: String,
+            default: 'main'
         },
         isTrialVerified: {
             type: Boolean,

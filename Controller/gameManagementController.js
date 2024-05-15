@@ -1,4 +1,5 @@
 import Game from "../Models/gameManagement.js"
+import Registration from '../Models/RegisterationModel.js';
 
 const getGameFormat = () => {
     const gameFormat = {
@@ -27,10 +28,35 @@ const getGameFormat = () => {
 export const createLandingPage = async (req, res) => {
     try{
         console.log(req.body)
+        const userData = await Registration.findById(req.body.gameFormat.ownerId);
+        if(userData.isTrial){
+            if(userData.isTrialVerified){
+                const totalLaningPages = await Game.find({ownerId: req.body.gameFormat.ownerId});
+                if(totalLaningPages.length > 1){
+                    throw new Error("You can only have one landing page");
+                }
+            }else{
+                throw new Error("Please Verify Your Trial");
+            }
+        }else{
+            if(userData.paymentDone){
+                const date = userData.expiryDate;
+                if(date > Date.now()){
+                    throw new Error("Please Renew Your Subscription");
+                }else{
+                    const totalLaningPages = await Game.find({ownerId: req.body.gameFormat.ownerId});
+                    if(totalLaningPages.length > 10){
+                        throw new Error("You can only create 10 landing pages");
+                    }
+                }
+            }else{
+                throw new Error("Please Pay Your Subscription");
+            }
+        }
         const data = await Game.create(req.body.gameFormat);
         res.status(200).json(data);
     }catch(err){
-        res.status(400).json(err);
+        res.status(400).json({message: err.message});
     }
 }
 

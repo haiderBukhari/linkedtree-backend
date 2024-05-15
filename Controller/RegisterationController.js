@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import Registration from '../Models/RegisterationModel.js';
 // import { sendVerificationEmail } from '../utils/sendVerificationEmail.js';
+import SubAccountsModel from "../Models/SubAccounts.js";
 import { Resend } from "resend"
 
 const resend = new Resend("re_55SZ9Msc_B795Z4pRmpKaN2pnhTbt1TfT");
@@ -68,6 +69,11 @@ export const login = async (req, res) => {
         const { email, password } = req.query;
         const user = await Registration.findOne({ email });
         if (!user) {
+            const subAccountUser = await SubAccountsModel.findOne({ email });
+            if (subAccountUser) {
+                const token = jwt.sign({ userId: subAccountUser._id }, process.env.ENCRYPTION_SECRET, { expiresIn: '1d' });
+                return res.status(200).json({ message: 'Login successful', token, isVerified: true, payment: true, userId: subAccountUser._id, name: subAccountUser.name, accountType: 'sub', ownerId: subAccountUser.ownerId });
+            }
             throw new Error('Invalid email or password');
         }
         if (user.password !== password) {
@@ -76,8 +82,10 @@ export const login = async (req, res) => {
         if (!user.isVerified) {
             await sendVerificationEmail(user.email, user._id);
         }
+        user.lastLogin = new Date();
+        await user.save();
         const token = jwt.sign({ userId: user._id }, process.env.ENCRYPTION_SECRET, { expiresIn: '1d' });
-        return res.status(200).json({ message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name });
+        return res.status(200).json({ message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name, accountType: 'main', ownerId: null });
     } catch (err) {
         return res.status(400).json({
             status: "failed",
@@ -140,7 +148,7 @@ export const updateTrialUser = async (req, res) => {
     try {
         const id = req.query.id;
         const user = await Registration.findById(id);
-        user.isVerified = true;
+        user.isTrialVerified = true;
         await user.save();
         await sendVerificationEmail(user.email, user._id);
         return res.status(200).json(user);
