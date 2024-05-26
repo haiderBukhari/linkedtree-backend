@@ -41,7 +41,7 @@ export const createLandingPage = async (req, res) => {
         }else{
             if(userData.paymentDone){
                 const date = userData.expiryDate;
-                if(date > Date.now()){
+                if(date < Date.now()){
                     throw new Error("Please Renew Your Subscription");
                 }else{
                     const totalLaningPages = await Game.find({ownerId: req.body.gameFormat.ownerId});
@@ -74,6 +74,18 @@ export const getSingleLandingPages = async (req, res) => {
     try{
         const {pageId} = req.query;
         const data = await Game.findById(pageId);
+        res.status(200).json(data);
+    }catch(err){
+        res.status(400).json(err);
+    }
+}
+
+export const getLandingPages = async (req, res) => {
+    try{
+        const {pageId} = req.query;
+        const data = await Game.findById(pageId);
+        data.visitedMembers += 1;
+        await data.save();
         res.status(200).json(data);
     }catch(err){
         res.status(400).json(err);

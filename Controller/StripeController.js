@@ -78,6 +78,7 @@ export const yearlySessionCheckout = async (req, res) => {
 
 
 export const completePayment = async (req, res) => {
+    console.log("Payment")
     const sessionId = req.query.sessionId;
     const session = await stripeInstance.checkout.sessions.retrieve(sessionId);
     const userData = session.metadata;

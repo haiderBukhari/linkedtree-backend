@@ -85,7 +85,7 @@ export const login = async (req, res) => {
         user.lastLogin = new Date();
         await user.save();
         const token = jwt.sign({ userId: user._id }, process.env.ENCRYPTION_SECRET, { expiresIn: '1d' });
-        return res.status(200).json({ message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name, accountType: 'main', ownerId: null });
+        return res.status(200).json({ message: 'Login successful', token, isVerified: user.isVerified, payment: user.paymentDone, userId: user._id, name: user.name, accountType: 'main', isTrial: user.isTrial, ownerId: null });
     } catch (err) {
         return res.status(400).json({
             status: "failed",

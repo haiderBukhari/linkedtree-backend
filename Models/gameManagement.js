@@ -6,6 +6,10 @@ const gameManagement = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             default: null
         },
+        resturantName: {
+            type: String,
+            default: ''
+        },
         brandName: {
             type: String,
             default: ''
@@ -47,6 +51,58 @@ const gameManagement = new mongoose.Schema(
                 type: String,
                 default: ''
             },
+            option1frequency: {
+                type: Number,
+                default: 0
+            },
+            option2frequency: {
+                type: Number,
+                default: 0
+            },
+            option3frequency: {
+                type: Number,
+                default: 0
+            },
+            option4frequency: {
+                type: Number,
+                default: 0
+            },
+            option5frequency: {
+                type: Number,
+                default: 0
+            },
+            option6frequency: {
+                type: Number,
+                default: 0
+            },
+            option7frequency: {
+                type: Number,
+                default: 0
+            },
+            option8frequency: {
+                type: Number,
+                default: 0
+            }
+        },
+        visitedMembers: {
+            type: Number,
+            default: 0
+        },
+        instagramClicks: {
+            type: Number,
+            default: 0
+        },
+        facebookClicks: {
+            type: Number,
+            default: 0
+        },
+        twitterClicks: {
+            type: Number,
+            default: 0
+        },
+        googleMapsClicks: {
+            type: Number,
+            default: 0
         },
         instagram: {
             type: String,
