@@ -8,6 +8,7 @@ import paymentHistoryRoutes from "./Routes/paymentHistoryRoute.js";
 import GameRoutes from "./Routes/GameManagement.js";
 import { Resend } from "resend"
 import subAccountRoutes from "./Routes/subAccountRoutes.js";
+import reviewRoutes from "./Routes/ReviewRoutes.js";
 
 const resend = new Resend("re_55SZ9Msc_B795Z4pRmpKaN2pnhTbt1TfT");
 
@@ -21,6 +22,7 @@ app.use('/auth', RegisterationRoutes);
 app.use('/sub/auth', subAccountRoutes);
 app.use('/checkout', StripeCheckout);
 app.use('/game', GameRoutes);
+app.use('/review', reviewRoutes);
 app.use('/payment/history', paymentHistoryRoutes);
 app.post('/result', async (req, res) => {
     const data = await resend.emails.send({

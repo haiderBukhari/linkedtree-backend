@@ -1,5 +1,7 @@
+import ReviewModel from "../Models/ReviewsModel.js";
 import jwt from 'jsonwebtoken'
 import Registration from '../Models/RegisterationModel.js';
+import Game from "../Models/gameManagement.js"
 // import { sendVerificationEmail } from '../utils/sendVerificationEmail.js';
 import SubAccountsModel from "../Models/SubAccounts.js";
 import { Resend } from "resend"
@@ -143,6 +145,66 @@ export const getTrialUser = async (req, res) => {
         })
     }
 }
+
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await Registration.find({ email: { $ne: 'admin@gmail.com' } });
+
+        // Map over users and fetch associated games
+        const data = await Promise.all(users.map(async (item) => {
+            const games = await Game.find({ ownerId: item._id });
+
+            // Ensure that item is a plain object before spreading
+            const itemObj = item.toObject();
+
+            return {
+                ...itemObj,
+                pages: games.length,
+                access: games.some(game => game.isTrial) ? 'Trial' : (item.accountType === 'main' ? 'Owner' : 'Sub')
+            };
+        }));
+
+        return res.status(200).json(data);
+    } catch (err) {
+        return res.status(400).json({
+            status: "failed",
+            message: err.message
+        });
+    }
+};
+
+export const getAllPages = async (req, res) => {
+    try {
+        // Step 1: Fetch all games
+        const games = await Game.find();
+
+        // Step 2: Process each game to fetch owner and reviews data
+        const data = await Promise.all(games.map(async (game) => {
+            // Fetch the owner (user) details
+            const owner = await Registration.findById(game.ownerId);
+            const ownerName = owner ? owner.name : 'Unknown';
+
+            // Fetch the reviews for the game owner
+            const reviews = await ReviewModel.find({ ownerId: game.ownerId });
+            const reviewCount = reviews.length;
+
+            // Construct the response object
+            return {
+                ...game.toObject(), // Ensure game is a plain object
+                ownerName,
+                reviews: reviewCount,
+            };
+        }));
+
+        // Send the constructed data as response
+        return res.status(200).json(data);
+    } catch (err) {
+        return res.status(400).json({
+            status: "failed",
+            message: err.message
+        });
+    }
+};
 
 export const updateTrialUser = async (req, res) => {
     try {

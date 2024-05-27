@@ -47,6 +47,10 @@ const registrationSchema = new mongoose.Schema(
         isTrial: {
             type: Boolean
         },
+        blocked: {
+            type: Boolean,
+            default: false
+        },
         accountType: {
             type: String,
             default: 'main'
