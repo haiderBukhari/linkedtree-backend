@@ -1,6 +1,7 @@
 import ReviewModel from "../Models/ReviewsModel.js";
 import jwt from 'jsonwebtoken'
 import Registration from '../Models/RegisterationModel.js';
+import paymentModel from "../Models/paymentHistoryModel.js"
 import Game from "../Models/gameManagement.js"
 // import { sendVerificationEmail } from '../utils/sendVerificationEmail.js';
 import SubAccountsModel from "../Models/SubAccounts.js";
@@ -230,6 +231,27 @@ export const updateUserData = async (req, res) => {
         }
         const user = await Registration.findByIdAndUpdate(id, req.body, { new: true });
         return res.status(200).json(user);
+    } catch (err) {
+        return res.status(400).json({
+            status: "failed",
+            message: err.message
+        })
+    }
+}
+
+export const getAdminDashboardData = async (req, res) => {
+    try{
+        const users = await Registration.find();
+        const payments = await paymentModel.find();
+        let total = 0;
+        for(const paymentData of payments){
+            total += paymentData.amount;
+        }
+
+        return res.status(200).json({
+            users: users.length -1 ,
+            revenue: total
+        });
     } catch (err) {
         return res.status(400).json({
             status: "failed",
