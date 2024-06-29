@@ -38,7 +38,7 @@ export const sendVerificationEmail = (name, emailId, id) => {
 				button: {
 					color: '#22BC66',
 					text: 'Open App',
-					link: `https://project-frontend-tree.vercel.app/verify?id=${id}`,
+					link: `http://195.200.14.117/verify?id=${id}`,
 				},
 			},
 		},

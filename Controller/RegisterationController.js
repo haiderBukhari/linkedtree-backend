@@ -14,7 +14,7 @@ async function sendVerificationEmail(email, id){
         from: 'Onboarding <onboarding@ffsboyswah.com>',
         to: `${email}`,
         subject: 'Onboarding Verficiation Email Linkedtree',
-        html: `<p>Thanks for Registering you can verify by clicking the below Link <br/> <strong> <a href="https://project-frontend-tree.vercel.app/verify?id=${id}">https://project-frontend-tree.vercel.app/verify?id=${id}</a></strong>!</p>`
+        html: `<p>Thanks for Registering you can verify by clicking the below Link <br/> <strong> <a href="http://195.200.14.117/verify?id=${id}">http://195.200.14.117/verify?id=${id}</a></strong>!</p>`
     });
 }
 
